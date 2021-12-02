@@ -1,6 +1,5 @@
-file = open("res/02_input.txt", "r")
-
-steps = file.readlines()
+with open("res/02_input.txt", "r") as file:
+    steps = file.readlines()
 
 x = y = aim = 0
 

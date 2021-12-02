@@ -1,7 +1,8 @@
-file = open("res/01_input.txt", "r")
+with open("res/01_input.txt", "r") as file:
+    lines = file.readlines()
 
 measurements = []
-for line in file:
+for line in lines:
     measurements.append(int(line))
 
 previousMeasurement = None
