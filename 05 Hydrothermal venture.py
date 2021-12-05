@@ -33,10 +33,6 @@ for vent in vents:
 
         diagram[x][y] += 1
 
-crossPoints = 0
-for i in range(0, len(diagram)-1):
-    for j in range(0, len(diagram[i])-1):
-        if diagram[i][j] > 1:
-            crossPoints += 1
+crossPoints = sum([sum([1 for x in row if x > 1]) for row in diagram])
 
 print(crossPoints)
