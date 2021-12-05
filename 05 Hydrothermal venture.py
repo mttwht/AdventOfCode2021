@@ -15,20 +15,21 @@ vents = parseVents(lines)
 
 diagram = [[0 for j in range(1, 1000)] for i in range(1, 1000)]
 for vent in vents:
-    # Filter all non-horizontal and non-vertical vents
-    if vent[0][0] != vent[1][0] and vent[0][1] != vent[1][1]:
-        continue
-    
-    x = min(vent[0][0], vent[1][0])
-    y = min(vent[0][1], vent[1][1])
+    x,y = vent[0]
+    x2,y2 = vent[1]
     
     diagram[x][y] += 1
 
-    while max(vent[0][0], vent[1][0]) > x or max(vent[0][1], vent[1][1]) > y:
-        if max(vent[0][0], vent[1][0]) > x:
+    while x != x2 or y != y2:
+        if x2 > x:
             x += 1
-        elif max(vent[0][1], vent[1][1]) > y:
+        elif x2 < x:
+            x -= 1
+            
+        if y2 > y:
             y += 1
+        elif y2 < y:
+            y -= 1
 
         diagram[x][y] += 1
 
