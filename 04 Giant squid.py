@@ -44,10 +44,8 @@ def isWinningBoard(board):
             return True
     return False
 
-def findWinningBoard(boards):
-    for board in boards:
-        if isWinningBoard(board):
-            return board
+def findWinningBoards(boards):
+    return [board for board in boards if isWinningBoard(board)]
 
 def getLineScore(line):
     return sum([x[0] for x in line if x[1] == 0])
@@ -58,15 +56,16 @@ def getBoardScore(board):
 def getWinningScore(board, number):
     return getBoardScore(board) * number
 
+
 numberDraws = parseDraws(lines[0])
 boards = parseBoards(lines[2:])
 
 for drawNumber in numberDraws:
     boards = markBoards(boards, drawNumber)
     
-    winningBoard = findWinningBoard(boards)
-    if winningBoard is not None:
-        print(winningBoard)
-        print(getWinningScore(winningBoard, drawNumber))
-        break;
-
+    winningBoards = findWinningBoards(boards)
+    boards = [board for board in boards if not winningBoards.__contains__(board)]
+    if len(winningBoards) > 0:
+        for board in winningBoards:
+            print(board)
+            print("score", getWinningScore(board, drawNumber))
