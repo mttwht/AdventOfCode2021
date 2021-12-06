@@ -5,16 +5,15 @@ def parseFish(str):
     return [int(x) for x in str.split(",")]
 
 fish = parseFish(lines[0])
+fishCounts = [fish.count(i) for i in range(0, 9)]
 
-for day in range(0, 80):
-    print("day", day)
+for day in range(0, 256):
     # age fish by 1 day
-    fish = [x - 1 for x in fish]
+    dupes = fishCounts[0]
+    fishCounts = [fishCounts[i+1] for i in range(0, len(fishCounts)-1)]
     # create new fish
-    fish.extend(8 for x in fish if x < 0)
+    fishCounts.append(dupes)
     # reset fish which have duplicated
-    for i in range(0, len(fish)):
-        if fish[i] < 0:
-            fish[i] = 6
+    fishCounts[6] += dupes
 
-print(len(fish))
+print(sum(fishCounts))
