@@ -23,10 +23,10 @@ pairs = {
 openings = list(pairs.keys())
 closings = list(pairs.values())
 points = {
-    ')': 3,
-    ']': 57,
-    '}': 1197,
-    '>': 25137
+    ')': 1,
+    ']': 2,
+    '}': 3,
+    '>': 4
 }
 
 def lineScore(line):
@@ -37,10 +37,19 @@ def lineScore(line):
         elif c == pairs[openChunks[-1]]:
             openChunks.pop()
         else:
-            return points[c]
+            return None
+    
+    score = 0
+    openChunks.reverse()
+    for c in openChunks:
+        score *= 5
+        score += points[pairs[c]]
+    return score
             
-score = 0
+scores = []
 for line in lines:
-    score += lineScore(line) or 0
+    score = lineScore(line)
+    if score: scores.append(score)
 
-print(score)
+scores.sort()
+print(scores[int(len(scores) / 2)])
