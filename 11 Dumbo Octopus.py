@@ -36,8 +36,10 @@ def countFlashes(grid):
 	return sum([sum([1 for x in row if x == 0]) for row in grid])
 
 flashes = 0
-for i in range(0, 100):
+for i in range(0, 1000):
     doStep(lines)
     flashes += countFlashes(lines)
+    if(countFlashes(lines) == 100):
+        print(i+1)
+        break
 
-print(flashes)
