@@ -59,9 +59,16 @@ def findPathsTo(map, currentPath, end):
     currentPos = currentPath[len(currentPath)-1]
     
     if currentPos == end:
+        # print(currentPath)
         return [currentPath]
-    elif currentPos.islower() and currentPath.count(currentPos) > 1:
+    elif currentPos == currentPath[0] and len(currentPath) > 1:
         return None
+    elif currentPos.islower() and currentPath.count(currentPos) > 2:
+        return None
+    elif currentPos.islower() and currentPath.count(currentPos) > 1:
+        smallRoomVisits = [currentPath.count(room) for room in map if room.islower()]
+        if len(list(filter(lambda x: x > 1, smallRoomVisits))) > 1:
+            return None
     
     paths = None
     for room in map[currentPos]:
@@ -77,8 +84,5 @@ def findPathsTo(map, currentPath, end):
 
 caveMap = parseInput(lines)
 paths = findPathsTo(caveMap, ["start"], "end")
-
-for path in paths:
-    print(path)
 
 print(len(paths))
