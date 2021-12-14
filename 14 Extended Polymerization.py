@@ -37,26 +37,32 @@ def parseInput(lines):
     rules = parseRules(lines[index+1:])
     return polymer, rules
 
-def apply(rules, polymer):
-    result = ""
-    for i in range(0, len(polymer)-1):
-        result += polymer[i] + rules[polymer[i:i+2]]
-    result += polymer[len(polymer)-1]
+def apply(rules, pairs):
+    result = dict.fromkeys(rules.keys(), 0)
+    for k, v in rules.items():
+        result[k[0]+v] += pairs[k]
+        result[v+k[1]] += pairs[k]
     return result
 
-def countChars(polymer):
+def countChars(pairs, polymer):
     counts = {}
-    for c in polymer:
-        if c not in counts: counts[c] = 0
-        counts[c] += 1
+    for k, v in pairs.items():
+        if k[0] not in counts: counts[k[0]] = 0
+        counts[k[0]] += v
+    counts[polymer[len(polymer)-1]] += 1
     return counts
 
 
 polymer, rules = parseInput(lines)
+pairs = dict.fromkeys(rules.keys(), 0)
+for i in range(0, len(polymer)-1): pairs[polymer[i:i+2]] += 1
 
-for i in range(0, 10):
-    polymer = apply(rules, polymer)
-charCounts = countChars(polymer)
+for i in range(0, 40):
+    pairs = apply(rules, pairs)
+
+print(pairs)
+
+charCounts = countChars(pairs, polymer)
 
 answer = max(charCounts.values()) - min(charCounts.values())
 
