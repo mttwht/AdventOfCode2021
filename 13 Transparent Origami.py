@@ -62,7 +62,7 @@ def fold(paper, instruction):
 
 def printPaper(paper):
 	for row in paper:
-		print(str(map(lambda x: "#" if x else ".", row)))
+		print(" ".join(map(lambda x: "#" if x else " ", row)))
 
 def countDots(paper):
     return sum([sum([1 for point in row if point > 0]) for row in paper])
@@ -80,5 +80,5 @@ for x,y in dots:
 
 for f in folds:
     paper = fold(paper, f)
-    print(countDots(paper))
-    break
+
+printPaper(paper)
