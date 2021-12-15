@@ -1,23 +1,28 @@
 with open("res/15_input.txt", "r") as file:
     lines = [line.strip() for line in file.readlines()]
 
-lines = """1163751742
-1381373672
-2136511328
-3694931569
-7463417111
-1319128137
-1359912421
-3125421639
-1293138521
-2311944581""".splitlines()
+# lines = """1163751742
+# 1381373672
+# 2136511328
+# 3694931569
+# 7463417111
+# 1319128137
+# 1359912421
+# 3125421639
+# 1293138521
+# 2311944581""".splitlines()
 
 
 def parseMap(lines):
-	caveMap = []
-	for line in lines:
-		caveMap.append([int(x) for x in line])
-	return caveMap
+    caveMap = []
+    for i in range(0, 5):
+        for line in lines:
+            newLine = []
+            for j in range(0, 5):
+                newLine.extend([int(x) + i + j for x in line])
+            newLine = list(map(lambda x: x-9 if x > 9 else x, newLine))
+            caveMap.append(newLine)
+    return caveMap
 
 def getNorth(caveMap, pos):
     return (pos[0], pos[1]-1) if pos[1] > 0 else None
