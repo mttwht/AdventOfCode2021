@@ -8,22 +8,22 @@ with open("res/18_input.txt", "r") as file:
 # # final sum = [[[[1,1],[2,2]],[3,3]],[4,4]]
 # # magnitude = 445
 
-lines = """[1,1]
-[2,2]
-[3,3]
-[4,4]
-[5,5]""".splitlines()
-# final sum = [[[[3,0],[5,3]],[4,4]],[5,5]]
-# magnitude = 791
-
 # lines = """[1,1]
 # [2,2]
 # [3,3]
 # [4,4]
-# [5,5]
-# [6,6]""".splitlines()
-# # final sum = [[[[5,0],[7,4]],[5,5]],[6,6]]
-# # magnitude = 1137
+# [5,5]""".splitlines()
+# # final sum = [[[[3,0],[5,3]],[4,4]],[5,5]]
+# # magnitude = 791
+
+lines = """[1,1]
+[2,2]
+[3,3]
+[4,4]
+[5,5]
+[6,6]""".splitlines()
+# final sum = [[[[5,0],[7,4]],[5,5]],[6,6]]
+# magnitude = 1137
 
 # lines = """[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]
 # [7,[[[3,7],[4,3]],[[6,3],[8,8]]]]
@@ -71,13 +71,56 @@ def parseSfNumber(s):
             s,c = strPop(s,0)
             n += c
         return int(n), s
+    
+def getPair(s, i):
+    lb = s.rindex('[', 0, i+1)
+    rb = s.index(']', i)
+    return s[lb:rb+1], lb
 
-def sfNeedsExploding(n, depth=1):
-    if type(n) == int: return False
-    elif depth > 4: return True
-    else: return sfNeedsExploding(n[0], depth+1) or sfNeedsExploding(n[1], depth+1)
+def getStrint(s, i):
+    chars = s[i]
+    startPos = i
+    for j in range(i-1, 0, -1):
+        if s[j] >= '0' and s[j] <= '9':
+            chars = s[j] + chars
+            startPos = j
+        else:
+            break
+    for j in range(i+1, len(s)):
+        if s[j] >= '0' and s[j] <= '9':
+            chars = s[j] + chars
+        else:
+            break
+    return chars, startPos
+
+def sfNeedsExploding(n):
+    openBrackets = 0
+    s = str(n)
+    for i in range(len(s)):
+        c = s[i]
+        if c == '[': openBrackets += 1
+        elif c == ']': openBrackets -= 1
+        if openBrackets > 4: return i
 
 def sfDoExplode(n):
+    s = str(n)
+    i = sfNeedsExploding(n)
+    pair, iPair = getPair(s, i)
+    left, iLeft = getStrint(s, i+1)
+    right, iRight = getStrint(s, iPair+len(pair)-2)
+    for j in range(iPair+len(pair), len(s)):
+        if s[j] >= '0' and s[j] <= '9':
+            num, iNum = getStrint(s, j)
+            s = s[:iNum] + str(int(num) + int(right)) + s[iNum+len(num):]
+            break
+    for j in range(iPair, 0, -1):
+        if s[j] >= '0' and s[j] <= '9':
+            num, iNum = getStrint(s, j)
+            s = s[:iNum] + str(int(num) + int(left)) + s[iNum+len(num):]
+            break
+    s = s[:iPair] + '0' + s[iPair+len(pair):]
+    s = s.replace(" ", "")
+    n,s = parseSfNumber(s)
     return n
 
 def sfNeedsSplitting(n):
