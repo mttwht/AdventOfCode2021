@@ -1,20 +1,20 @@
 with open("res/18_input.txt", "r") as file:
     lines = [line.strip() for line in file.readlines()]
 
-lines = """[1,1]
-[2,2]
-[3,3]
-[4,4]""".splitlines()
-# # final sum = [[[[1,1],[2,2]],[3,3]],[4,4]]
-# # magnitude = 445
-
 # lines = """[1,1]
 # [2,2]
 # [3,3]
-# [4,4]
-# [5,5]""".splitlines()
-# # final sum = [[[[3,0],[5,3]],[4,4]],[5,5]]
-# # magnitude = 791
+# [4,4]""".splitlines()
+# # final sum = [[[[1,1],[2,2]],[3,3]],[4,4]]
+# # magnitude = 445
+
+lines = """[1,1]
+[2,2]
+[3,3]
+[4,4]
+[5,5]""".splitlines()
+# final sum = [[[[3,0],[5,3]],[4,4]],[5,5]]
+# magnitude = 791
 
 # lines = """[1,1]
 # [2,2]
@@ -73,7 +73,9 @@ def parseSfNumber(s):
         return int(n), s
 
 def sfNeedsExploding(n, depth=1):
-    return False
+    if type(n) == int: return False
+    elif depth > 4: return True
+    else: return sfNeedsExploding(n[0], depth+1) or sfNeedsExploding(n[1], depth+1)
 
 def sfDoExplode(n):
     return n
