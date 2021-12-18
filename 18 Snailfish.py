@@ -52,11 +52,46 @@ def parseSfNumber(s):
             n += c
         return int(n), s
 
+def sfNeedsExploding(n, depth=1):
+    return False
+
+def sfDoExplode(n):
+    return n
+
+def sfNeedsSplitting(n):
+    return False
+
+def sfDoSplit(n):
+    return n
+
+def sfReduce(n):
+    processing = True
+    while processing:
+        if sfNeedsExploding(n):
+            n = sfDoExplode(n)
+        elif sfNeedsSplitting(n):
+            n = sfDoSplit(n)
+        else:
+            processing = False
+    return n
+
+def sfAdd(n1, n2):
+    result = [n1, n2]
+    result = sfReduce(result)
+    return result
+
 
 sfNumbers = []
 for line in lines:
     n,s = parseSfNumber(line)
     sfNumbers.append(n)
 
-for sfn in sfNumbers:
-    print(sfn)
+result = None
+for n in sfNumbers:
+    print(n)
+    if result is None:
+        result = n
+    else:
+        result = sfAdd(result, n)
+
+print(result)
