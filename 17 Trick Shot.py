@@ -78,9 +78,12 @@ def getMaxY(target):
 
 target = parseTarget(inputData)
 
+validTrajectories = set()
 for y in range(getMaxY(target), getMinY(target)-1, -1):
     for x in range(getMinX(target), getMaxX(target)+1):
         posInTarget = fireProbe((x,y), target)
         if posInTarget is not None:
-            print(calcMaxTravel(y))
-            exit()
+            validTrajectories.add((x, y))
+
+print(validTrajectories)
+print("count =", len(validTrajectories))
