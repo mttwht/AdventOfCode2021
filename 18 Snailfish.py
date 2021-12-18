@@ -100,6 +100,9 @@ def sfAdd(n1, n2):
     result = sfReduce(result)
     return result
 
+def sfMagnitude(n):
+    if type(n) == int: return n
+    else: return 3 * sfMagnitude(n[0]) + 2 * sfMagnitude(n[1])
 
 sfNumbers = []
 for line in lines:
@@ -115,3 +118,4 @@ for n in sfNumbers:
         result = sfAdd(result, n)
 
 print(result)
+print(sfMagnitude(result))
