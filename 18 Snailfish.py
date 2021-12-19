@@ -73,7 +73,7 @@ def parseSfNumber(s):
         return int(n), s
     
 def getPair(s, i):
-    lb = s.rindex('[', 0, i+1)
+    lb = s.rindex('[', 0, i+3)
     rb = s.index(']', i)
     return s[lb:rb+1], lb
 
@@ -88,7 +88,7 @@ def getStrint(s, i):
             break
     for j in range(i+1, len(s)):
         if s[j] >= '0' and s[j] <= '9':
-            chars = s[j] + chars
+            chars = chars + s[j]
         else:
             break
     return chars, startPos
@@ -113,12 +113,12 @@ def sfDoExplode(n):
             num, iNum = getStrint(s, j)
             s = s[:iNum] + str(int(num) + int(right)) + s[iNum+len(num):]
             break
-    for j in range(iPair, 0, -1):
+    s = s[:iPair] + '0' + s[iPair+len(pair):]
+    for j in range(iPair-1, 0, -1):
         if s[j] >= '0' and s[j] <= '9':
             num, iNum = getStrint(s, j)
             s = s[:iNum] + str(int(num) + int(left)) + s[iNum+len(num):]
             break
-    s = s[:iPair] + '0' + s[iPair+len(pair):]
     s = s.replace(" ", "")
     n,s = parseSfNumber(s)
     return n
