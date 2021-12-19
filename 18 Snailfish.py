@@ -168,11 +168,13 @@ for line in lines:
 
 result = None
 for n in sfNumbers:
-    print(n)
     if result is None:
         result = n
+        print(n)
     else:
         result = sfAdd(result, n)
+        print("+", n)
+        print("=", result)
 
 print(result)
 print(sfMagnitude(result))
