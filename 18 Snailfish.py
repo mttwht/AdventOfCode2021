@@ -124,10 +124,22 @@ def sfDoExplode(n):
     return n
 
 def sfNeedsSplitting(n):
-    return False
+    if type(n) == int:
+        return True if n >= 10 else False
+    else:
+        return sfNeedsSplitting(n[0]) or sfNeedsSplitting(n[1])
 
 def sfDoSplit(n):
-    return n
+    if type(n) == int:
+        if n >= 10: return [int(n/2), int((n+1)/2)],True
+        else: return n,False
+    else:
+        n0,n0split = sfDoSplit(n[0])
+        n[0] = n0
+        if n0split: n1,n1split = n[1],False
+        else: n1,n1split = sfDoSplit(n[1])
+        n[1] = n1
+        return n,(n0split or n1split)
 
 def sfReduce(n):
     processing = True
@@ -135,7 +147,7 @@ def sfReduce(n):
         if sfNeedsExploding(n):
             n = sfDoExplode(n)
         elif sfNeedsSplitting(n):
-            n = sfDoSplit(n)
+            n,_ = sfDoSplit(n)
         else:
             processing = False
     return n
