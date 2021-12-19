@@ -50,6 +50,7 @@ with open("res/18_input.txt", "r") as file:
 # [[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]""".splitlines()
 # # final sum = [[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]
 # # magnitude = 4140
+# # largest magnitude from sum of any two = 3993
 
 
 def strPop(s, i):
@@ -161,20 +162,22 @@ def sfMagnitude(n):
     if type(n) == int: return n
     else: return 3 * sfMagnitude(n[0]) + 2 * sfMagnitude(n[1])
 
+
 sfNumbers = []
 for line in lines:
     n,s = parseSfNumber(line)
     sfNumbers.append(n)
 
-result = None
-for n in sfNumbers:
-    if result is None:
-        result = n
-        print(n)
-    else:
-        result = sfAdd(result, n)
-        print("+", n)
-        print("=", result)
+result = (0, [], [])
 
-print(result)
-print(sfMagnitude(result))
+for a in sfNumbers:
+    for b in sfNumbers:
+        if a == b: continue
+        ab = sfAdd(a, b)
+        m = sfMagnitude(ab)
+        if m > result[0]: result = (m, [a,b], ab)
+
+print(" ", result[1][0])
+print("+", result[1][1])
+print("=", result[2])
+print("mag()", "=", result[0])
