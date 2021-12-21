@@ -46,10 +46,14 @@ def mapPointsOntoFullMap(scanner, fullMap):
                     (vx,vy,vz) = (rx-bx, ry-by, rz-bz) # v for vector
                     tempMapping = {(tx+vx,ty+vy,tz+vz) for (tx,ty,tz) in scanner} # t for temp
                     if len(fullMap.intersection(tempMapping)) >= 12:
-                        return tempMapping
+                        return tempMapping, (vx,vy,vz)
             scanner = rotatePointsZ(scanner)
         scanner = rotatePointsX(scanner) if xy % 2 else rotatePointsY(scanner)
 
+def manhattanDistance(p1, p2):
+    (x1,y1,z1) = p1
+    (x2,y2,z2) = p2
+    return abs(x1-x2) + abs(y1-y2) + abs(z1-z2)
 
 
 scanners = parseInput(lines)
@@ -57,18 +61,28 @@ total = len(scanners)
 current = 1
 
 fullMap = scanners.pop(0)
+scannerPositions = {(0,0,0)}
 
 while len(scanners) > 0:
     scanner = scanners.pop(0)
     
-    points = mapPointsOntoFullMap(scanner, fullMap)
+    result = mapPointsOntoFullMap(scanner, fullMap)
     
-    if points is None:
+    if result is None:
         scanners.append(scanner)
         print("skip")
     else:
+        points,scannerPos = result
         fullMap = fullMap.union(points)
+        scannerPositions.add(scannerPos)
         current += 1
         print("done", current, "/", total)
+
+maxDist = 0
+for p1 in scannerPositions:
+    for p2 in scannerPositions:
+        d = manhattanDistance(p1,p2)
+        if d > maxDist: maxDist = d
 	
 print(len(fullMap))
+print("max manhattan distance =", maxDist)
