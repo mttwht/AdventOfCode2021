@@ -59,9 +59,9 @@ def countPixels(image):
 algo,image = parseInput(lines)
 image = extendImage(image, '.')
 printImage(image)
-for i in range(2):
+for i in range(50):
     image = enhanceImage(image, algo)
-    print()
-    printImage(image)
+    # print()
+    # printImage(image)
 
 print(countPixels(image))
