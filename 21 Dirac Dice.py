@@ -5,37 +5,49 @@ with open("res/21_input.txt", "r") as file:
 # Player 2 starting position: 8""".splitlines()
 
 board = list(range(1, 10+1))
-die = list(range(1,100+1))
-rollCounter = 0
+rollFreqs = {3:1, 4:3, 5:6, 6:7, 7:6, 8:3, 9:1}
 
 
 def parseInput(lines):
-    start1 = int(lines[0].split().pop())
-    start2 = int(lines[1].split().pop())
-    return board.index(start1), board.index(start2)
+    playerPositions = {}
+    for line in lines:
+        words = line.split()
+        player = int(words[1])
+        position = int(words[4])
+        playerPositions[player] = position-1
+    return playerPositions
 
-def getDieRoll():
-    global rollCounter
-    val = die[rollCounter % 100]
-    rollCounter += 1
-    return val
+cache = {}
+def playGame(players, positions, scores, roll=0):
+    wins = dict.fromkeys(players, 0)
+    if roll > 0:
+        player = players.pop(0)
+        players.append(player)
+        positions[player] += roll
+        positions[player] %= len(board)
+        scores[player] += board[positions[player]]
+        if scores[player] >= 21:
+            wins[player] += 1
+            return wins
+    
+    for roll,freq in rollFreqs.items():
+        state = (positions[1], positions[2], scores[1], scores[2], roll, players[1])
+        if state in cache:
+            results = cache[state]
+        else:
+            results = playGame(players.copy(), positions.copy(), scores.copy(), roll).items()
+            cache[state] = results
+        for p,w in results:
+            wins[p] += w * freq
+    return wins
+        
 
 
-pos1,pos2 = parseInput(lines)
-score1 = score2 = 0
+positions = parseInput(lines)
+players = list(positions.keys())
+scores = dict.fromkeys(players, 0)
 
-while score1 < 1000 and score2 < 1000:
-    roll = 0
-    for i in range(3): roll += getDieRoll()
-    if rollCounter % 2 == 1:
-        pos1 += roll
-        pos1 %= len(board)
-        score1 += board[pos1]
-    else:
-        pos2 += roll
-        pos2 %= len(board)
-        score2 += board[pos2]
+outcomes = playGame(players, positions, scores)
 
-print("losing score", min(score1,score2))
-print("dice rolls", rollCounter)
-print("result", min(score1,score2) * rollCounter)
+for player in players:
+    print("player", player, "wins in", outcomes[player], "universes")
